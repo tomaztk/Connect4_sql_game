@@ -46,11 +46,12 @@ check_win <- function(board, player, row, col) {
   return(FALSE)
 }
 
-#############################
-# Main function to play 4Row
-############################
+#################################
+# Main function to play Connect4
+#################################
 
 play_game <- function() {
+  #define the size of board
   rows <- 6
   cols <- 7
   nof_tokens <- 42
