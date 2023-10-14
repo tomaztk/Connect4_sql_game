@@ -37,7 +37,7 @@ BEGIN
     IF @Winner IS NULL
     BEGIN
         DECLARE @Row INT;
-        SET @Row = 6; -- Start from the bottom row
+        SET @Row = 6;  
 
         WHILE @Row >= 1
         BEGIN
@@ -126,7 +126,7 @@ select * from Connect4Game
 
 -- Run game
 
-EXECUTE MakeMove 1, 2
+EXECUTE MakeMove 2, 2
 
 select * from Connect4Game
 
