@@ -5,7 +5,7 @@ This GitHub repository contains code samples that demonstrate how to create and 
 # What is Connect 4 game?
 This is the classical puzzle game, that is easy and fun to play. The objective of the game is to assemble the line of four tokens on the board that are either vertical, horizontal, or diagonal.
 
-<!--![](/img/game2048.png?style=centerme) -->
+
 <div style="text-align:center"><img src="https://upload.wikimedia.org/wikipedia/en/a/a4/Connect_four_game.svg" alt="Connect 4" style="width:300px;"/></div>
 Source: Wikipedia
 
