@@ -12,14 +12,12 @@ CREATE TABLE Connect4Results (
 );
 
 
-
 -- Initialize a new game
 CREATE PROCEDURE StartNewGame AS
 BEGIN
     INSERT INTO Connect4Game (Board, CurrentPlayer, Winner)
     VALUES ('                                         ', 'X', NULL);
 END;
-
 
 
 -- Make a move
@@ -116,7 +114,6 @@ BEGIN
 
     RETURN 0; -- Default to no win
 END;
-
 
 
 -- start a game
