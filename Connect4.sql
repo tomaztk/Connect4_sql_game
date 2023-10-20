@@ -119,12 +119,7 @@ END;
 -- start a game
 EXECUTE StartNewGame
 
-select * from Connect4Game
-
 -- Run game
-
 EXECUTE MakeMove 2, 2
-
 select * from Connect4Game
-
 select * from [dbo].[Connect4Results]

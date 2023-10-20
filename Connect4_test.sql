@@ -59,3 +59,58 @@ END;
 select * from [dbo].[DiagonalTable]
 
 EXEC CalculateDiagonalSum @StartRow = 3, @StartCol = 2;
+
+
+
+--------------------
+---- ver 2  ------
+--------------------
+
+use sql_games
+
+CREATE TABLE Connect4 (
+    [Row] INT,
+    [Column] INT,
+    Player CHAR(1) NULL
+);
+
+
+CREATE PROCEDURE MakeMove_c4 @Column INT, @Player CHAR(1) AS
+BEGIN
+    DECLARE @Row INT;
+
+    -- Find the lowest available row in the selected column
+    SELECT TOP 1 @Row = MAX([Row]) + 1
+    FROM Connect4
+    WHERE [Column] = @Column;
+
+    -- If the column is already full, return an error message
+    IF @Row IS NULL
+    BEGIN
+       SELECT 'Column is full. Choose another column.'
+    END;
+
+    -- Insert the player's token into the selected row and column
+    INSERT INTO Connect4 ([Row], [Column], Player)
+    VALUES (@Row, @Column, @Player);
+
+    -- Check for a vertical win
+    DECLARE @PlayerCount INT;
+
+    SELECT @PlayerCount = COUNT(*)
+    FROM Connect4
+    WHERE [Column] = @Column
+    GROUP BY Player
+    HAVING Player = @Player AND COUNT(*) >= 4;
+
+    IF @PlayerCount IS NOT NULL
+    BEGIN
+        SELECT 'Player ' + @Player + ' wins!'
+    END;
+END;
+
+
+exec MakeMove_c4 2,1
+
+
+select * from Connect4
