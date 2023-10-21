@@ -11,14 +11,12 @@ CREATE TABLE Connect4Results (
     ResultText VARCHAR(100)
 );
 
-
 -- Initialize a new game
 CREATE PROCEDURE StartNewGame AS
 BEGIN
     INSERT INTO Connect4Game (Board, CurrentPlayer, Winner)
     VALUES ('                                         ', 'X', NULL);
 END;
-
 
 -- Make a move
 CREATE OR ALTER PROCEDURE MakeMove @GameID INT, @Column INT AS
