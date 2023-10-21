@@ -44,7 +44,7 @@ EXEC dbo.Play 5, 1
 
 -- Add token to 4th column for player 2
 EXEC dbo.Play 4, 2
-
+```
 
 
 ## Finding the solution
