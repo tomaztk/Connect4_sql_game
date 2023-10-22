@@ -34,13 +34,13 @@ AS
 BEGIN
   SELECT 'col: | 1 | 2 | 3 | 4 | 5 | 6 | 7 |' as Connect_4_Board
   union all
-  SELECT 'row: | ' + substring(board,1,1) + 
-              ' | ' + substring(board,2,1) +
-              ' | ' + substring(board,3,1) +
-              ' | ' + substring(board,4,1) +
-              ' | ' + substring(board,5,1) +
-              ' | ' + substring(board,6,1) +
-              ' | ' + substring(board,7,1) + ' |'
+  SELECT 'row: | ' + substring(REPLACE(REPLACE(REPLACE(board, 1, 'X'), 5, 'O'), 0, ' '),1,1) + 
+              ' | ' + substring(REPLACE(REPLACE(REPLACE(board, 1, 'X'), 5, 'O'), 0, ' '),2,1) +
+              ' | ' + substring(REPLACE(REPLACE(REPLACE(board, 1, 'X'), 5, 'O'), 0, ' '),3,1) +
+              ' | ' + substring(REPLACE(REPLACE(REPLACE(board, 1, 'X'), 5, 'O'), 0, ' '),4,1) +
+              ' | ' + substring(REPLACE(REPLACE(REPLACE(board, 1, 'X'), 5, 'O'), 0, ' '),5,1) +
+              ' | ' + substring(REPLACE(REPLACE(REPLACE(board, 1, 'X'), 5, 'O'), 0, ' '),6,1) +
+              ' | ' + substring(REPLACE(REPLACE(REPLACE(board, 1, 'X'), 5, 'O'), 0, ' '),7,1) + ' |'
   
   FROM [dbo].[con4t]
 END;
@@ -240,4 +240,9 @@ BEGIN
     END
 END;
 GO
+
+
+
+
+
 
