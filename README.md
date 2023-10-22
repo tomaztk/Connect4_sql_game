@@ -23,33 +23,31 @@ Two groups of procedure are available to start and play the game:
 
 ## Create and initialize matrix
 
-The SQL file: _01_Initialize.sql_  describes an empty board for a given default dimension (7x6).
+The SQL Procedure: _dbo.Init_  describes and creates an empty board for a given default dimension (7x6).
 
 Run the code:
 ```(sql)
--- Create board 
-EXEC dbo.CREATE_board
+-- Initialize the game
+EXEC dbo.Init
 
 ```
 
-## Procedures to make moves
+## Procedures to check for win (finding the solution)
 
-The SQL file: _02_Play_game.sql_ describes four procedures that imitate a VERTICAL, HORIZONTAL, DIAGONAL UP and DIAGONAL DOWN solution search  in board accordingly.
+The SQL procedure: _dbo.CheckWin_ describes four ways to check if either of players won a game. It searches  in VERTICAL, HORIZONTAL, DIAGONAL UP and DIAGONAL DOWN way through the board, accordingly.
+
+
+## Procedures to add tokens
 
 Run the code:
 
 ```(sql)
 -- Add token to 5th column for player 1
-EXEC dbo.Play 5, 1
+EXEC dbo.AddToken 1, 5
 
 -- Add token to 4th column for player 2
-EXEC dbo.Play 4, 2
+EXEC dbo.AddToken 2, 4
 ```
-
-
-## Finding the solution
-
-The last file _03_Find_solution.sql_ holds the procedure that calculate and find the solution, ending the game when there are four tokens in a row. This procedure is called internally by the `dbo.Play`procedure.
 
 
 
