@@ -21,13 +21,32 @@ BEGIN
     INSERT INTO dbo.con4t (board) SELECT '0000000'
     INSERT INTO dbo.con4t (board) SELECT '0000000'
 
-    SELECT board FROM dbo.con4t
+    -- SELECT board FROM dbo.con4t
+    EXEC dbo.display_results
 
 END;
 GO
 
 
--- check for game stop
+-- Showing results Procedure
+CREATE OR ALTER PROCEDURE dbo.display_results
+AS
+BEGIN
+  SELECT 'col: | 1 | 2 | 3 | 4 | 5 | 6 | 7 |' as Connect_4_Board
+  union all
+  SELECT 'row: | ' + substring(board,1,1) + 
+              ' | ' + substring(board,2,1) +
+              ' | ' + substring(board,3,1) +
+              ' | ' + substring(board,4,1) +
+              ' | ' + substring(board,5,1) +
+              ' | ' + substring(board,6,1) +
+              ' | ' + substring(board,7,1) + ' |'
+  
+  FROM [dbo].[con4t]
+END;
+
+
+-- check for game stop Procedure
 CREATE OR ALTER PROCEDURE dbo.CheckWin (
   @winner varchar(200) OUTPUT
 )
@@ -179,7 +198,7 @@ END;
 
 
 
-
+-- Add Token Procedure
 CREATE OR ALTER PROCEDURE dbo.AddToken(
      @user tinyint -- 1, 2 ; player 1 = 1; player 2 = 5
     ,@col tinyint -- 1,2,3,4,5,6,7
@@ -209,7 +228,8 @@ BEGIN
         END
       SET @max_r = @max_r + 1
   END
-  SELECT board from dbo.con4t
+  -- SELECT board from dbo.con4t
+  EXEC dbo.display_results
 
 
   DECLARE @OutputParameter varchar(100)
@@ -221,10 +241,3 @@ BEGIN
 END;
 GO
 
-
-
-CREATE PROCEDURE dbo.display_results
-AS
-BEGIN
-
-END;
