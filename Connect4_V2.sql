@@ -173,7 +173,8 @@ into dbo.temp123
 where len(res) > 1
 
   SET @winner = (select res from dbo.temp123)
-
+  DROP TABLE IF EXISTS dbo.temp123;
+  DROP TABLE IF EXISTS dbo.con4temp;
 END;
 
 
@@ -219,3 +220,11 @@ BEGIN
     END
 END;
 GO
+
+
+
+CREATE PROCEDURE dbo.display_results
+AS
+BEGIN
+
+END;
