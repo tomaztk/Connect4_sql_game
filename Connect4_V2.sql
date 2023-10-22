@@ -52,46 +52,34 @@ GO
 exec dbo.AddToken @user = 2, @col = 5
 
 
-
-
-SELECT 
-  
-  for (dir in directions) {
-    count <- 1
-    for (i in 1:4) {
-      r <- row + dir[1] * i
-      c <- col + dir[2] * i
-      if (r >= 1 && r <= nrow(board) && c >= 1 && c <= ncol(board) && board[r, c] == player) {
-        count <- count + 1
-      } else {
-        break
-      }
-    }
-    if (count >= 4) {
-      return(TRUE)
-    }
-  }
-  return(FALSE)
-}
-
-
-
-
-CREATE PROCEDURE CalculateDiagonalSum @StartRow INT, @StartCol INT AS
+-- check for game stop
+CREATE OR ALTER PROCEDURE dbo.CheckWin
+AS
 BEGIN
-    DECLARE @DiagonalSum INT = 0;
+-- create temp table
+  DROP TABLE IF EXISTS dbo.con4temp;
 
-    WHILE EXISTS (SELECT 1 FROM DiagonalTable WHERE RowIndex = @StartRow AND ColIndex = @StartCol)
-    BEGIN
-        DECLARE @CurrentValue INT;
+    SELECT
+       SUBSTRING(board, 1, 1) AS Col1
+      ,SUBSTRING(board, 2, 1) AS Col2
+      ,SUBSTRING(board, 3, 1) AS Col3
+      ,SUBSTRING(board, 4, 1) AS Col4
+      ,SUBSTRING(board, 5, 1) AS Col5
+      ,SUBSTRING(board, 6, 1) AS Col6
+      ,SUBSTRING(board, 7, 1) AS Col7
+  into dbo.con4temp
+  FROM dbo.con4t
 
-        SELECT @CurrentValue = Value
-        FROM DiagonalTable
-        WHERE RowIndex = @StartRow AND ColIndex = @StartCol;
+   -- vertical
+     DECLARE @max_r int = 1
+     WHILE @max_r <= 6
+     BEGIN
+        SELECT board from dbo.con4t
+        SET @max_r = @max_r + 1
+      END
 
-        SET @DiagonalSum = @DiagonalSum + @CurrentValue;
+  -- horizontal
+  
+END;
 
-        -- Move to the next diagonal element (down and to the right)
-        SET @StartRow = @StartRow + 1;
-        SET @StartCol = @StartCol + 1;
-    END;
+
