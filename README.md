@@ -21,7 +21,8 @@ Two groups of procedure are available to start and play the game:
 
 
 
-## Create and initialize matrix
+
+## Create initialized table (matrix)
 
 The SQL Procedure: _dbo.Init_  describes and creates an empty board for a given default dimension (7x6).
 
@@ -31,6 +32,20 @@ Run the code:
 EXEC dbo.Init
 
 ```
+
+## Displaying the results
+
+The SQL Procedure: _dbo.display_results_  prettifies the board game (7x6) and shows the tokens as X (for player 1) and O (for player 2).
+
+Run the code:
+```(sql)
+-- Check the board 
+EXEC dbo.display_results
+
+```
+
+![Prettify board](/img/game_board.png)
+
 
 ## Procedures to check for win (finding the solution)
 
@@ -53,10 +68,14 @@ EXEC dbo.AddToken 2, 4
 
 # Generic code for playing:
 
-```EXEC dbo.PLAY {column}, {player}```
+```EXEC dbo.AddToken {column}, {player}```
 
-
-And for ....
+Sample code:
+```(sql)
+EXEC dbo.Init
+EXEC dbo.AddToken 1, 5
+EXEC dbo.AddToken 2, 4
+```
 
 
 ## Forking or cloning the repository
