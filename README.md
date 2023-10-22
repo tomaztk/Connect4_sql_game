@@ -30,7 +30,6 @@ Run the code:
 ```(sql)
 -- Initialize the game
 EXEC dbo.Init
-
 ```
 
 ## Displaying the results
@@ -41,7 +40,6 @@ Run the code:
 ```(sql)
 -- Check the board 
 EXEC dbo.display_results
-
 ```
 
 ![Prettify board](/img/game_board.png)
