@@ -26,52 +26,17 @@ BEGIN
 END;
 GO
 
--- init the game
-EXEC dbo.Init
-
-
-CREATE OR ALTER PROCEDURE dbo.AddToken(
-     @user tinyint -- 1, 2 ; player 1 = 1; player 2 = 5
-    ,@col tinyint -- 1,2,3,4,5,6,7
-) AS
-BEGIN
-  declare @token int
-  if @user = 1  set @token = 1 
-  else set @token = 5
-
-  declare @max_r int = 1
-
-  WHILE @max_r <= 6
-  BEGIN
-      DECLARE @board char(7)
-      SET @board = (SELECT board from con4t where r = @max_r)
-      PRINT @board
-      IF substring(@board,@col,1) = 0
-        BEGIN
-
-          UPDATE con4t
-            set board = STUFF(board,@col,1,@token)
-
-            WHERE
-              r = @max_r
-          set @max_r = 100 -- to exit the while loop immediatelly
-        END
-      SET @max_r = @max_r + 1
-  END
-  SELECT board from dbo.con4t
-END;
-GO
-
-
-
 
 -- check for game stop
-CREATE OR ALTER PROCEDURE dbo.CheckWin
+CREATE OR ALTER PROCEDURE dbo.CheckWin (
+  @winner varchar(200) OUTPUT
+)
 AS
 BEGIN
 -- win combinations include: 1111 or 5555
 -- create temp table
      DROP TABLE IF EXISTS dbo.con4temp;
+     DROP TABLE IF EXISTS dbo.temp123;
 
       SELECT
         r
@@ -83,8 +48,10 @@ BEGIN
         ,CAST(SUBSTRING(board, 6, 1) AS INT) AS Col6
         ,CAST(SUBSTRING(board, 7, 1) AS INT) AS Col7
       into dbo.con4temp
-      FROM dbo.con4t
+      FROM dbo.con4t;
 
+with ver
+as (
    -- vertical
    SELECT DISTINCT
    CASE 
@@ -101,7 +68,9 @@ BEGIN
         SELECT string_agg(col6, '') as col FROM  dbo.con4temp UNION ALL
         SELECT string_agg(col7, '') as col FROM  dbo.con4temp
     ) as x
-
+),
+hor as
+(
   -- horizontal
   SELECT DISTINCT
   CASE 
@@ -109,7 +78,9 @@ BEGIN
       when board like '%5555' or board like '%5555%' or board like '5555%' then 'Winner 2'
       else NULL end as res
      from dbo.con4t
-
+),
+dia1A as
+(
 -- diagonal 1 A
       SELECT
       DISTINCT
@@ -135,7 +106,8 @@ BEGIN
             left join dbo.con4temp as t7
             on t6.r = t7.r-1
           ) AS x
-
+), 
+dia1b as (
 -- diagonal 1 B 
       SELECT
       DISTINCT
@@ -160,7 +132,8 @@ BEGIN
             on t6.r = t7.r-1
 
           ) AS x
-
+),
+dia2A AS (
 -- Diagonal 2 A
     SELECT
     DISTINCT
@@ -186,48 +159,63 @@ BEGIN
           left join dbo.con4temp as t7
           on t6.r = t7.r+1
         ) AS x
+)
+, together as (
+select distinct res from dia2A  union all
+select res from dia1A  union all
+select res from dia1B  union all
+select res from ver  union all
+select res from hor
+)
+select distinct res
+into dbo.temp123 
+  from together
+where len(res) > 1
+
+  SET @winner = (select res from dbo.temp123)
 
 END;
 
 
 
 
--- ==============
--- Test cases
--- testing -diagonal1A
-exec dbo.AddToken @user = 1, @col = 1
-exec dbo.AddToken @user = 2, @col = 2
-exec dbo.AddToken @user = 1, @col = 2
-exec dbo.AddToken @user = 2, @col = 3  --2x
-exec dbo.AddToken @user = 1, @col = 3  
-exec dbo.AddToken @user = 2, @col = 4  --3x
-exec dbo.AddToken @user = 1, @col = 4  
+CREATE OR ALTER PROCEDURE dbo.AddToken(
+     @user tinyint -- 1, 2 ; player 1 = 1; player 2 = 5
+    ,@col tinyint -- 1,2,3,4,5,6,7
+) AS
+BEGIN
+  
+
+  declare @token int
+  if @user = 1  set @token = 1 
+  else set @token = 5
+
+  declare @max_r int = 1
+  WHILE @max_r <= 6
+  BEGIN
+      DECLARE @board char(7)
+      SET @board = (SELECT board from con4t where r = @max_r)
+      PRINT @board
+      IF substring(@board,@col,1) = 0
+        BEGIN
+
+          UPDATE con4t
+            set board = STUFF(board,@col,1,@token)
+
+            WHERE
+              r = @max_r
+          set @max_r = 100 -- to exit the while loop immediatelly
+        END
+      SET @max_r = @max_r + 1
+  END
+  SELECT board from dbo.con4t
 
 
--- testing -diagonal1B
-exec dbo.AddToken @user = 1, @col = 2
-exec dbo.AddToken @user = 2, @col = 3
-exec dbo.AddToken @user = 1, @col = 3
-exec dbo.AddToken @user = 2, @col = 4  --2x
-exec dbo.AddToken @user = 1, @col = 4  
-exec dbo.AddToken @user = 2, @col = 5  --3x
-exec dbo.AddToken @user = 1, @col = 5  
-
--- testing -diagonal1C
-exec dbo.AddToken @user = 1, @col = 2 --2x
-exec dbo.AddToken @user = 2, @col = 3 --2x
-exec dbo.AddToken @user = 1, @col = 3
-exec dbo.AddToken @user = 2, @col = 4  --3x
-exec dbo.AddToken @user = 1, @col = 4  
-exec dbo.AddToken @user = 2, @col = 5  --4x
-exec dbo.AddToken @user = 1, @col = 5  
-
--- testing -diagonal2
-exec dbo.AddToken @user = 1, @col = 6 
-exec dbo.AddToken @user = 2, @col = 5 
-exec dbo.AddToken @user = 1, @col = 5
-exec dbo.AddToken @user = 2, @col = 4 -- 2x
-exec dbo.AddToken @user = 1, @col = 4   
-exec dbo.AddToken @user = 2, @col = 3  -- 3x
-exec dbo.AddToken @user = 1, @col = 3
- 
+  DECLARE @OutputParameter varchar(100)
+  exec dbo.CheckWin @OutputParameter OUTPUT
+  IF (@OutputParameter IS NOT NULL)
+    BEGIN
+      SELECT @OutputParameter
+    END
+END;
+GO
