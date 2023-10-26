@@ -197,7 +197,6 @@ where len(res) > 1
 END;
 
 
-
 -- Add Token Procedure
 CREATE OR ALTER PROCEDURE dbo.AddToken(
      @user tinyint -- 1, 2 ; player 1 = 1; player 2 = 5
