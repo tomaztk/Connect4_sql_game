@@ -178,6 +178,34 @@ dia2A AS (
           left join dbo.con4temp as t7
           on t6.r = t7.r+1
         ) AS x
+),
+-- Add all diagonal!
+dia2All AS (
+
+    SELECT
+    DISTINCT
+      CASE 
+          when diag like '%1111' or diag like '%1111%' or diag like '1111%' then 'Winner 1'
+          when diag like '%5555' or diag like '%5555%' or diag like '5555%' then 'Winner 2'
+          else NULL end as res
+        FROM
+        (
+          select 
+          concat(t1.col1, t2.col2, t3.col3, t4.col4, t5.col5, t6.col6) as diag
+          from dbo.con4temp as t1
+          left join dbo.con4temp as t2
+          on t1.r = t2.r+2
+          left join dbo.con4temp as t3
+          on t2.r = t3.r+2
+          left join dbo.con4temp as t4
+          on t3.r = t4.r+2
+          left join dbo.con4temp as t5
+          on t4.r = t5.r+2
+          left join dbo.con4temp as t6
+          on t5.r = t6.r+2
+          left join dbo.con4temp as t7
+          on t6.r = t7.r+2
+        ) AS x
 )
 , together as (
 select distinct res from dia2A  union all
@@ -195,6 +223,8 @@ where len(res) > 1
   DROP TABLE IF EXISTS dbo.temp123;
   DROP TABLE IF EXISTS dbo.con4temp;
 END;
+
+
 
 
 -- Add Token Procedure
