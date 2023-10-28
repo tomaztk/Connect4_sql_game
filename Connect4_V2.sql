@@ -212,7 +212,8 @@ select distinct res from dia2A  union all
 select res from dia1A  union all
 select res from dia1B  union all
 select res from ver  union all
-select res from hor
+select res from hor union all
+select * from dia2all
 )
 select distinct res
 into dbo.temp123 
