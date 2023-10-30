@@ -190,21 +190,19 @@ dia2All AS (
           else NULL end as res
         FROM
         (
-          select 
-          concat(t1.col1, t2.col2, t3.col3, t4.col4, t5.col5, t6.col6) as diag
-          from dbo.con4temp as t1
-          left join dbo.con4temp as t2
-          on t1.r = t2.r+2
-          left join dbo.con4temp as t3
-          on t2.r = t3.r+2
-          left join dbo.con4temp as t4
-          on t3.r = t4.r+2
-          left join dbo.con4temp as t5
-          on t4.r = t5.r+2
-          left join dbo.con4temp as t6
-          on t5.r = t6.r+2
-          left join dbo.con4temp as t7
-          on t6.r = t7.r+2
+            select 
+              string_agg(right(diaga,1),'') as diag
+            from (
+              select 
+              concat(t1.col1, t2.col2, t3.col3, t4.col4, t5.col5, t6.col6) as diaga
+              from dbo.con4temp as t1
+              left join dbo.con4temp as t2 on t1.r = t2.r+2
+              left join dbo.con4temp as t3 on t2.r = t3.r+2
+              left join dbo.con4temp as t4 on t3.r = t4.r+2
+              left join dbo.con4temp as t5 on t4.r = t5.r+2
+              left join dbo.con4temp as t6 on t5.r = t6.r+2
+              left join dbo.con4temp as t7 on t6.r = t7.r+2
+            ) as xx
         ) AS x
 )
 , together as (
