@@ -162,4 +162,3 @@ INSERT INTO dbo.con4t (board) SELECT '5111555'
 exec display_results
 
 exec dbo.AddToken @user = 1, @col = 4 --error
-
