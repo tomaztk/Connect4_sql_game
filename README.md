@@ -92,3 +92,9 @@ Collaboration on this code is welcome and so are any additional questions or com
 
 ## License
 Code is licensed under the MIT license.
+
+
+## ToDO
+
+-  error scripting (limits of the board)
+-  user turns (2 x P1 in a row can not play)
