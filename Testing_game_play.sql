@@ -119,4 +119,47 @@ exec dbo.AddToken @user = 1, @col = 5
 exec dbo.AddToken @user = 2, @col = 4 -- 2x 
 exec dbo.AddToken @user = 1, @col = 4
 
--- ToDO: correct!
+
+
+-- Testing 2nd/3rd/+ middle rows
+drop table dbo.con4t
+create table dbo.con4t
+(r int identity(6,-1) not null 
+,board char(7) default('0000000')
+);
+
+INSERT INTO dbo.con4t (board) SELECT '0000000'
+INSERT INTO dbo.con4t (board) SELECT '0000000'
+INSERT INTO dbo.con4t (board) SELECT '0000000'
+INSERT INTO dbo.con4t (board) SELECT '0000000'
+INSERT INTO dbo.con4t (board) SELECT '1151511'
+INSERT INTO dbo.con4t (board) SELECT '5111555'
+
+exec display_results
+
+exec dbo.AddToken @user = 1, @col = 5
+exec dbo.AddToken @user = 2, @col = 6 
+exec dbo.AddToken @user = 1, @col = 6
+exec dbo.AddToken @user = 2, @col = 7 -- 2x 
+exec dbo.AddToken @user = 1, @col = 7
+
+
+
+-- Testing 2nd/3rd/+ middle rows
+drop table dbo.con4t
+create table dbo.con4t
+(r int identity(6,-1) not null 
+,board char(7) default('0000000')
+);
+
+INSERT INTO dbo.con4t (board) SELECT '0000000'
+INSERT INTO dbo.con4t (board) SELECT '0000000'
+INSERT INTO dbo.con4t (board) SELECT '0000000'
+INSERT INTO dbo.con4t (board) SELECT '5515115'
+INSERT INTO dbo.con4t (board) SELECT '1151511'
+INSERT INTO dbo.con4t (board) SELECT '5111555'
+
+exec display_results
+
+exec dbo.AddToken @user = 1, @col = 4 --error
+
