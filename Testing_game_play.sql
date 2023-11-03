@@ -162,3 +162,22 @@ INSERT INTO dbo.con4t (board) SELECT '5111555'
 exec display_results
 
 exec dbo.AddToken @user = 1, @col = 4 --error
+
+
+
+--- test
+
+select 
+
+concat(r6.col1, r5.col2, r4.col3, r3.col4) as d1
+,concat(r6.col2, r5.col3, r4.col4, r3.col5) as d2
+,concat(r6.col3, r5.col4, r4.col5, r3.col6) as d3
+,concat(r6.col4, r5.col5, r4.col6, r3.col7) as d4
+
+from con4temp as r6
+left join con4temp as r5
+on r5.r = r6.r+1
+left join con4temp as r4
+on r4.r = r5.r+1
+left join con4temp as r3
+on r3.r = r4.r+1
