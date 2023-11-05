@@ -163,3 +163,23 @@ exec display_results
 exec dbo.AddToken @user = 1, @col = 4 
 exec dbo.AddToken @user = 2, @col = 5
 exec dbo.AddToken @user = 1, @col = 5
+
+
+-- checking validity of inputs
+-- init the game
+EXEC dbo.Init
+
+exec dbo.AddToken @user = 1, @col = 8
+exec dbo.AddToken @user = 1, @col = 0
+exec dbo.AddToken @user = 1, @col = 7
+exec dbo.AddToken @user = 4, @col = 7
+exec dbo.AddToken @user = 2, @col = 7
+exec dbo.AddToken @user = 1, @col = 7
+exec dbo.AddToken @user = 1, @col = 7 -- error; same user playing again
+exec dbo.AddToken @user = 2, @col = 7
+exec dbo.AddToken @user = 1, @col = 7
+exec dbo.AddToken @user = 2, @col = 7
+exec dbo.AddToken @user = 1, @col = 7 -- column overflow
+
+
+select * from [dbo].[con4t_steps] -- check!

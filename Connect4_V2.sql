@@ -8,10 +8,20 @@ BEGIN
 
   drop table if exists con4t;
 
+
   create table dbo.con4t
   (r int identity(6,-1) not null 
   ,board char(7) default('0000000')
   );
+
+  DROP TABLE IF exists con4t_steps;
+
+  CREATE TABLE dbo.con4t_steps
+  (id INT IDENTITY(1,1) NOT NULL
+  ,player TINYINT NOT NULL 
+  ,col TINYINT NOT NULL
+  )
+  INSERT INTO dbo.con4t_steps(player, col) VALUES (0,0)
 
   -- populate the game   GO 6
     INSERT INTO dbo.con4t (board) SELECT '0000000'
@@ -222,10 +232,61 @@ CREATE OR ALTER PROCEDURE dbo.AddToken(
 ) AS
 BEGIN
   
+    ----- ERROR coding
+    ----- ERROR coding
 
-  declare @token int
-  if @user = 1  set @token = 1 
-  else set @token = 5
+    -- check for correct column input
+    IF @col NOT IN (1,2,3,4,5,6,7)
+    BEGIN
+        SELECT 'Invalid Column number. Column number should be between 1 and 7.' AS Error_Message;
+        -- show board
+        EXEC dbo.display_results
+        RETURN; -- Exit the procedure
+    END
+
+  -- check for correct user input
+    IF @user NOT IN (1,2)
+    BEGIN
+        SELECT 'Invalid player number. Players must be 1 (X) or 2 (O).' AS Error_Message;
+        -- show board
+        EXEC dbo.display_results
+        RETURN; -- Exit the procedure
+    END
+
+        -- check for column overflow!
+    DECLARE @nof_tokens INT = (SELECT ISNULL(COUNT(col),0) FROM dbo.con4t_steps WHERE col = @col)
+
+    IF (@nof_tokens >= 6)
+        BEGIN
+          SELECT CONCAT('Column ', @col, ' if kinda full :-)!')  AS Error_Message;
+          -- show board
+          EXEC dbo.display_results
+          RETURN; -- Exit the procedure
+      END
+
+  -- check for correct order
+    DECLARE @max_step_ID INT = (SELECT ISNULL(MAX(id),0) FROM dbo.con4t_steps)
+    DECLARE @last_user TINYINT = (SELECT player FROM dbo.con4t_steps WHERE ID = @max_step_ID)
+
+    IF (@user <> @last_user)
+        BEGIN
+          INSERT INTO con4t_steps (player, col)
+          SELECT @user,@col
+        END
+    ELSE
+        BEGIN
+          SELECT CONCAT('Player ', @last_user, ' has just played!')  AS Error_Message;
+          -- show board
+          EXEC dbo.display_results
+          RETURN; -- Exit the procedure
+      END
+
+    ----- ERROR coding
+    ----- ERROR coding
+
+  DECLARE @token INT
+  IF @user = 1  SET @token = 1 
+  ELSE SET @token = 5
 
   declare @max_r int = 1
   WHILE @max_r <= 6
