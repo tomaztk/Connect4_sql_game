@@ -98,120 +98,111 @@ hor as
       else NULL end as res
      from dbo.con4t
 ),
-dia1A as
-(
--- diagonal 1 A
-      SELECT
-      DISTINCT
-        CASE 
-            when diag like '%1111' or diag like '%1111%' or diag like '1111%' then 'Winner 1'
-            when diag like '%5555' or diag like '%5555%' or diag like '5555%' then 'Winner 2'
-            else NULL end as res
-          FROM
-          (
-            select 
-            concat(t1.col1, t2.col2, t3.col3, t4.col4, t5.col5, t6.col6, t7.col7) as diag
-            from dbo.con4temp as t1
-            left join dbo.con4temp as t2
-            on t1.r = t2.r-1
-            left join dbo.con4temp as t3
-            on t2.r = t3.r-1
-            left join dbo.con4temp as t4
-            on t3.r = t4.r-1
-            left join dbo.con4temp as t5
-            on t4.r = t5.r-1
-            left join dbo.con4temp as t6
-            on t5.r = t6.r-1
-            left join dbo.con4temp as t7
-            on t6.r = t7.r-1
-          ) AS x
-), 
-dia1b as (
--- diagonal 1 B 
-      SELECT
-      DISTINCT
-        CASE 
-            when diag like '%1111' or diag like '%1111%' or diag like '1111%' then 'Winner 1'
-            when diag like '%5555' or diag like '%5555%' or diag like '5555%' then 'Winner 2'
-            else NULL end as res
-          FROM
-          (
-            select 
-            concat(t2.col2, t3.col3, t4.col4, t5.col5, t6.col6) as diag
-            from dbo.con4temp as t2
-            left join dbo.con4temp as t3
-            on t2.r = t3.r-1
-            left join dbo.con4temp as t4
-            on t3.r = t4.r-1
-            left join dbo.con4temp as t5
-            on t4.r = t5.r-1
-            left join dbo.con4temp as t6
-            on t5.r = t6.r-1
-            left join dbo.con4temp as t7
-            on t6.r = t7.r-1
+diag1A AS (
+select 
+ concat(c1.col1,c2.col2,c3.col3, c4.col4, c5.col5, c6.col6, c7.col7) as r1_c1
+,concat(c1.col2,c2.col3,c3.col4, c4.col5, c5.col6, c6.col7) as r1_c2
+,concat(c1.col3,c2.col4,c3.col5, c4.col6, c5.col7) as r1_c3 
+,concat(c1.col4,c2.col5,c3.col6, c4.col7) as r1_c4
+from con4temp as c1
+ join con4temp as c2 on c1.r+1 = c2.r
+ join con4temp as c3 on c2.r+1 = c3.r
+ join con4temp as c4 on c3.r+1 = c4.r
+ join con4temp as c5 on c4.r+1 = c5.r
+ join con4temp as c6 on c5.r+1 = c6.r
+left join con4temp as c7 on c6.r+1 = c7.r 
+), diag2A AS (
+    select 
+    concat(c1.col1,c2.col2,c3.col3, c4.col4, c5.col5) as sol
+    from con4temp as c1
+    left join con4temp as c2 on c1.r+1 = c2.r
+    left join con4temp as c3 on c2.r+1 = c3.r
+    left join con4temp as c4 on c3.r+1 = c4.r
+    left join con4temp as c5 on c4.r+1 = c5.r
+    left join con4temp as c6 on c5.r+1 = c6.r
+    left join con4temp as c7 on c6.r+1 = c7.r -- not exists!
+where 
+c1.r = 2
+), diag3A AS (
+    select 
+    concat(c1.col1,c2.col2,c3.col3, c4.col4, c5.col5, c6.col6, c7.col7) as sol
+    from con4temp as c1
+    left join con4temp as c2 on c1.r+1 = c2.r
+    left join con4temp as c3 on c2.r+1 = c3.r
+    left join con4temp as c4 on c3.r+1 = c4.r
+    left join con4temp as c5 on c4.r+1 = c5.r
+    left join con4temp as c6 on c5.r+1 = c6.r
+    left join con4temp as c7 on c6.r+1 = c7.r -- not exists!
+    where 
+    c1.r = 3
+)
 
-          ) AS x
-),
-dia2A AS (
--- Diagonal 2 A
-    SELECT
-    DISTINCT
-      CASE 
-          when diag like '%1111' or diag like '%1111%' or diag like '1111%' then 'Winner 1'
-          when diag like '%5555' or diag like '%5555%' or diag like '5555%' then 'Winner 2'
-          else NULL end as res
-        FROM
-        (
-          select 
-          concat(t1.col1, t2.col2, t3.col3, t4.col4, t5.col5, t6.col6) as diag
-          from dbo.con4temp as t1
-          left join dbo.con4temp as t2
-          on t1.r = t2.r+1
-          left join dbo.con4temp as t3
-          on t2.r = t3.r+1
-          left join dbo.con4temp as t4
-          on t3.r = t4.r+1
-          left join dbo.con4temp as t5
-          on t4.r = t5.r+1
-          left join dbo.con4temp as t6
-          on t5.r = t6.r+1
-          left join dbo.con4temp as t7
-          on t6.r = t7.r+1
-        ) AS x
-),
--- Add all diagonal!
-dia2All AS (
+-- diagonal RL
+, diag1B AS (
+    select 
+    concat(c1.col7,c2.col6,c3.col5,c4.col4, c5.col3,c6.col2) r1_c7
+    ,concat(c1.col6,c2.col5,c3.col4,c4.col3, c5.col2,c6.col1) r1_c6
+    ,concat(c1.col5,c2.col4,c3.col3,c4.col2, c5.col1) r1_c5
+    ,concat(c1.col4,c2.col3,c3.col2,c4.col1) r1_c4
+    from con4temp as c1
+    join con4temp as c2 on c1.r+1 = c2.r
+    join con4temp as c3 on c2.r+1 = c3.r
+    join con4temp as c4 on c3.r+1 = c4.r
+    join con4temp as c5 on c4.r+1 = c5.r
+    join con4temp as c6 on c5.r+1 = c6.r
+    left join con4temp as c7 on c6.r+1 = c7.r 
 
-    SELECT
-    DISTINCT
-      CASE 
-          when diag like '%1111' or diag like '%1111%' or diag like '1111%' then 'Winner 1'
-          when diag like '%5555' or diag like '%5555%' or diag like '5555%' then 'Winner 2'
-          else NULL end as res
-        FROM
-        (
-            select 
-              string_agg(right(diaga,1),'') as diag
-            from (
-              select 
-              concat(t1.col1, t2.col2, t3.col3, t4.col4, t5.col5, t6.col6) as diaga
-              from dbo.con4temp as t1
-              left join dbo.con4temp as t2 on t1.r = t2.r+2
-              left join dbo.con4temp as t3 on t2.r = t3.r+2
-              left join dbo.con4temp as t4 on t3.r = t4.r+2
-              left join dbo.con4temp as t5 on t4.r = t5.r+2
-              left join dbo.con4temp as t6 on t5.r = t6.r+2
-              left join dbo.con4temp as t7 on t6.r = t7.r+2
-            ) as xx
-        ) AS x
+), diag2B AS (
+
+    select 
+        concat(c1.col7,c2.col6,c3.col5,c4.col4, c5.col3) sol
+    from con4temp as c1
+        left join con4temp as c2 on c1.r+1 = c2.r
+        left join con4temp as c3 on c2.r+1 = c3.r
+        left join con4temp as c4 on c3.r+1 = c4.r
+        left join con4temp as c5 on c4.r+1 = c5.r
+        left join con4temp as c6 on c5.r+1 = c6.r
+        left join con4temp as c7 on c6.r+1 = c7.r -- not exists!
+    where 
+    c1.r = 2
+), diag3B AS (
+    select 
+        concat(c1.col7,c2.col6,c3.col5,c4.col4) sol
+    from con4temp as c1
+        left join con4temp as c2 on c1.r+1 = c2.r
+        left join con4temp as c3 on c2.r+1 = c3.r
+        left join con4temp as c4 on c3.r+1 = c4.r
+        left join con4temp as c5 on c4.r+1 = c5.r
+        left join con4temp as c6 on c5.r+1 = c6.r
+        left join con4temp as c7 on c6.r+1 = c7.r -- not exists!
+    where 
+    c1.r = 3
+), all_diagonals AS (
+      SELECT r1_c1 AS Solution FRom diag1A UNION ALL
+      SELECT r1_c2 AS Solution FRom diag1A UNION ALL
+      SELECT r1_c3 AS Solution FRom diag1A UNION ALL
+      SELECT r1_c4 AS Solution FRom diag1A UNION ALL
+      SELECT sol FROM diag2A UNION ALL
+      SELECT sol FROM diag3A UNION ALL
+      SELECT r1_c7 AS Solution FRom diag1B UNION ALL
+      SELECT r1_c6 AS Solution FRom diag1B UNION ALL
+      SELECT r1_c5 AS Solution FRom diag1B UNION ALL
+      SELECT r1_c4 AS Solution FRom diag1B UNION ALL
+      SELECT sol FROM diag2B UNION ALL
+      SELECT sol FROM diag3B
+), all_diag_sol AS (
+SELECT 
+    CASE 
+      when Solution like '%1111' or Solution like '%1111%' or Solution like '1111%' then 'Winner 1'
+      when Solution like '%5555' or Solution like '%5555%' or Solution like '5555%' then 'Winner 2'
+      else NULL end as res
+ FROM all_diagonals
+
 )
 , together as (
-select distinct res from dia2A  union all
-select res from dia1A  union all
-select res from dia1B  union all
+select DISTINCT res from all_diag_sol  union all
 select res from ver  union all
-select res from hor union all
-select * from dia2all
+select res from hor 
 )
 select distinct res
 into dbo.temp123 
@@ -222,8 +213,6 @@ where len(res) > 1
   DROP TABLE IF EXISTS dbo.temp123;
   DROP TABLE IF EXISTS dbo.con4temp;
 END;
-
-
 
 
 -- Add Token Procedure
