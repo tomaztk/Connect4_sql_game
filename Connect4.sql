@@ -1,5 +1,14 @@
-USE SQL_Games;
-GO
+/**************************************************************
+Game:               Connect4
+Create Date:        2023-11-02
+Author:             Tomaz Kastrun
+Description:        ..
+
+
+Usage:              EXEC dbo.Init
+                       
+ChangeLog:
+************************************************************* */
 
 
 CREATE OR ALTER PROCEDURE dbo.Init
@@ -32,14 +41,14 @@ BEGIN
     INSERT INTO dbo.con4t (board) SELECT '0000000'
 
     -- SELECT board FROM dbo.con4t
-    EXEC dbo.display_results
+    EXEC dbo.DisplayResults
 
 END;
 GO
 
 
 -- Showing results Procedure
-CREATE OR ALTER PROCEDURE dbo.display_results
+CREATE OR ALTER PROCEDURE dbo.DisplayResults
 AS
 BEGIN
   SELECT 'col: | 1 | 2 | 3 | 4 | 5 | 6 | 7 |' as Connect_4_Board
@@ -240,7 +249,7 @@ BEGIN
     BEGIN
         SELECT 'Invalid Column number. Column number should be between 1 and 7.' AS Error_Message;
         -- show board
-        EXEC dbo.display_results
+        EXEC dbo.DisplayResults
         RETURN; -- Exit the procedure
     END
 
@@ -249,7 +258,7 @@ BEGIN
     BEGIN
         SELECT 'Invalid player number. Players must be 1 (X) or 2 (O).' AS Error_Message;
         -- show board
-        EXEC dbo.display_results
+        EXEC dbo.DisplayResults
         RETURN; -- Exit the procedure
     END
 
@@ -277,7 +286,7 @@ BEGIN
         BEGIN
           SELECT CONCAT('Player ', @last_user, ' has just played!')  AS Error_Message;
           -- show board
-          EXEC dbo.display_results
+          EXEC dbo.DisplayResults
           RETURN; -- Exit the procedure
       END
 
@@ -307,7 +316,7 @@ BEGIN
       SET @max_r = @max_r + 1
   END
   -- SELECT board from dbo.con4t
-  EXEC dbo.display_results
+  EXEC dbo.DisplayResults
 
 
   DECLARE @OutputParameter varchar(100)
