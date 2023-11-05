@@ -165,7 +165,14 @@ exec dbo.AddToken @user = 1, @col = 4 --error
 
 
 
---- test
+-------------------------
+-------------------------
+-- common solution 
+-- for finding diagonals
+-- for LR  and for RL
+-------------------------
+-------------------------
+
 
 ;with diag1A AS (
 select 
@@ -205,9 +212,57 @@ c1.r = 2
     where 
     c1.r = 3
 )
+
+-- diagonal RL
+, diag1B AS (
+    select 
+    concat(c1.col7,c2.col6,c3.col5,c4.col4, c5.col3,c6.col2) r1_c7
+    ,concat(c1.col6,c2.col5,c3.col4,c4.col3, c5.col2,c6.col1) r1_c6
+    ,concat(c1.col5,c2.col4,c3.col3,c4.col2, c5.col1) r1_c5
+    ,concat(c1.col4,c2.col3,c3.col2,c4.col1) r1_c4
+    from con4temp as c1
+    join con4temp as c2 on c1.r+1 = c2.r
+    join con4temp as c3 on c2.r+1 = c3.r
+    join con4temp as c4 on c3.r+1 = c4.r
+    join con4temp as c5 on c4.r+1 = c5.r
+    join con4temp as c6 on c5.r+1 = c6.r
+    left join con4temp as c7 on c6.r+1 = c7.r 
+
+), diag2B AS (
+
+    select 
+        concat(c1.col7,c2.col6,c3.col5,c4.col4, c5.col3) sol
+    from con4temp as c1
+        left join con4temp as c2 on c1.r+1 = c2.r
+        left join con4temp as c3 on c2.r+1 = c3.r
+        left join con4temp as c4 on c3.r+1 = c4.r
+        left join con4temp as c5 on c4.r+1 = c5.r
+        left join con4temp as c6 on c5.r+1 = c6.r
+        left join con4temp as c7 on c6.r+1 = c7.r -- not exists!
+    where 
+    c1.r = 2
+), diag3B AS (
+    select 
+        concat(c1.col7,c2.col6,c3.col5,c4.col4) sol
+    from con4temp as c1
+        left join con4temp as c2 on c1.r+1 = c2.r
+        left join con4temp as c3 on c2.r+1 = c3.r
+        left join con4temp as c4 on c3.r+1 = c4.r
+        left join con4temp as c5 on c4.r+1 = c5.r
+        left join con4temp as c6 on c5.r+1 = c6.r
+        left join con4temp as c7 on c6.r+1 = c7.r -- not exists!
+    where 
+    c1.r = 3
+)
 SELECT r1_c1 AS Solution FRom diag1A UNION ALL
 SELECT r1_c2 AS Solution FRom diag1A UNION ALL
 SELECT r1_c3 AS Solution FRom diag1A UNION ALL
 SELECT r1_c4 AS Solution FRom diag1A UNION ALL
 SELECT sol FROM diag2A UNION ALL
-SELECT sol FROM diag3A
+SELECT sol FROM diag3A UNION ALL
+SELECT r1_c7 AS Solution FRom diag1B UNION ALL
+SELECT r1_c6 AS Solution FRom diag1B UNION ALL
+SELECT r1_c5 AS Solution FRom diag1B UNION ALL
+SELECT r1_c4 AS Solution FRom diag1B UNION ALL
+SELECT sol FROM diag2B UNION ALL
+SELECT sol FROM diag3B
