@@ -167,17 +167,47 @@ exec dbo.AddToken @user = 1, @col = 4 --error
 
 --- test
 
+;with diag1A AS (
 select 
-
-concat(r6.col1, r5.col2, r4.col3, r3.col4) as d1
-,concat(r6.col2, r5.col3, r4.col4, r3.col5) as d2
-,concat(r6.col3, r5.col4, r4.col5, r3.col6) as d3
-,concat(r6.col4, r5.col5, r4.col6, r3.col7) as d4
-
-from con4temp as r6
-left join con4temp as r5
-on r5.r = r6.r+1
-left join con4temp as r4
-on r4.r = r5.r+1
-left join con4temp as r3
-on r3.r = r4.r+1
+ concat(c1.col1,c2.col2,c3.col3, c4.col4, c5.col5, c6.col6, c7.col7) as r1_c1
+,concat(c1.col2,c2.col3,c3.col4, c4.col5, c5.col6, c6.col7) as r1_c2
+,concat(c1.col3,c2.col4,c3.col5, c4.col6, c5.col7) as r1_c3 
+,concat(c1.col4,c2.col5,c3.col6, c4.col7) as r1_c4
+from con4temp as c1
+ join con4temp as c2 on c1.r+1 = c2.r
+ join con4temp as c3 on c2.r+1 = c3.r
+ join con4temp as c4 on c3.r+1 = c4.r
+ join con4temp as c5 on c4.r+1 = c5.r
+ join con4temp as c6 on c5.r+1 = c6.r
+left join con4temp as c7 on c6.r+1 = c7.r 
+), diag2A AS (
+    select 
+    concat(c1.col1,c2.col2,c3.col3, c4.col4, c5.col5) as sol
+    from con4temp as c1
+    left join con4temp as c2 on c1.r+1 = c2.r
+    left join con4temp as c3 on c2.r+1 = c3.r
+    left join con4temp as c4 on c3.r+1 = c4.r
+    left join con4temp as c5 on c4.r+1 = c5.r
+    left join con4temp as c6 on c5.r+1 = c6.r
+    left join con4temp as c7 on c6.r+1 = c7.r -- not exists!
+where 
+c1.r = 2
+), diag3A AS (
+    select 
+    concat(c1.col1,c2.col2,c3.col3, c4.col4, c5.col5, c6.col6, c7.col7) as sol
+    from con4temp as c1
+    left join con4temp as c2 on c1.r+1 = c2.r
+    left join con4temp as c3 on c2.r+1 = c3.r
+    left join con4temp as c4 on c3.r+1 = c4.r
+    left join con4temp as c5 on c4.r+1 = c5.r
+    left join con4temp as c6 on c5.r+1 = c6.r
+    left join con4temp as c7 on c6.r+1 = c7.r -- not exists!
+    where 
+    c1.r = 3
+)
+SELECT r1_c1 AS Solution FRom diag1A UNION ALL
+SELECT r1_c2 AS Solution FRom diag1A UNION ALL
+SELECT r1_c3 AS Solution FRom diag1A UNION ALL
+SELECT r1_c4 AS Solution FRom diag1A UNION ALL
+SELECT sol FROM diag2A UNION ALL
+SELECT sol FROM diag3A
