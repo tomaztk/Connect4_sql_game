@@ -102,19 +102,18 @@ To work in GitHub, go to https://github.com/tomaztk/Connect4_sql_game and fork t
 
 You can also clone the repository. Note: further changes should be fetched manually.
 
-
 ```
 git clone -n https://github.com/tomaztk/Connect4_sql_game
 ```
 
-## Code of Conduct
+# Code of Conduct
 Collaboration on this code is welcome and so are any additional questions or comments.
 
 
-## License
+# License
 Code is licensed under the MIT license.
 
 
-## ToDO
+# ToDO
 
 -  AI to play against the computer
