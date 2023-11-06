@@ -9,17 +9,17 @@ This is the classical puzzle game, that is easy and fun to play. The objective o
 <div style="text-align:center"><img src="https://upload.wikimedia.org/wikipedia/en/a/a4/Connect_four_game.svg" alt="Connect 4" style="width:300px;"/></div>
 Source: Wikipedia
 
-# SQL Procedures
-
-Game consists of several procedures that make the game work.
-In order for the game to start, you will need to run all the procedures and use the main 'Play_game' procedure.
-
-Two groups of procedure are available to start and play the game:
-  1. Procedures to create and initialize matrix (helper procedures)
-  2. Procedures to make moves (helper procedures)
-  3. Procedure to play and find a solution (main procedure)
 
 
+# Game and T-SQL Procedures  
+
+Game consists of four T-SQL procedures that complete the game and can be played. Run the complete _Connect4.sql_ file in to install the game on your database.
+
+The procedures for the game are:
+  1. Procedure `dbo.Init` to create and initialize the game (start procedure)
+  2. Procedure `dbo.DisplayResults` to preetify the board and corresponding tokens (helper procedure)
+  2. Procedure `dbo.CheckWin` to check for game stop and verify the user inputs (helper procedure)
+  3. Procedure `dbo.AddToken` to play the game by both users (main procedure)
 
 
 ## Create initialized table (matrix)
@@ -31,28 +31,36 @@ Run the code:
 -- Initialize the game
 EXEC dbo.Init
 ```
+Procedure must be run every time, if you want to initiate the new game.
 
 ## Displaying the results
 
-The SQL Procedure: _dbo.display_results_  prettifies the board game (7x6) and shows the tokens as X (for player 1) and O (for player 2).
+The T-SQL Procedure: _dbo.DisplayResults_  prettifies the board game (7x6) and shows the tokens as X (for player 1) and O (for player 2).
 
 Run the code:
 ```(sql)
--- Check the board 
-EXEC dbo.display_results
+-- Check the board restults
+EXEC dbo.DisplayResults
 ```
 
 ![Prettify board](/img/game_board.png)
 
+This is a helper procedure and is internally run by other procedures.
 
 ## Procedures to check for win (finding the solution)
 
-The SQL procedure: _dbo.CheckWin_ describes four ways to check if either of players won a game. It searches  in VERTICAL, HORIZONTAL, DIAGONAL UP and DIAGONAL DOWN way through the board, accordingly.
+The T-SQL procedure: _dbo.CheckWin_ describes four ways to check if either of players won a game. It searches for:
+ - VERTICAL
+ - HORIZONTAL
+ - DIAGONAL UP and 
+ - DIAGONAL DOWN 
+ 
+ solutions through the board, accordingly.
 
 
 ## Procedures to add tokens
 
-Run the code:
+The T-SQL procedure: _dbo.AddToken_ gives the users the gameplay. The input parameters are user and column:
 
 ```(sql)
 -- Add token to 5th column for player 1
@@ -62,21 +70,34 @@ EXEC dbo.AddToken 1, 5
 EXEC dbo.AddToken 2, 4
 ```
 
+This procedure also holds some of the error handling; it checks for:
+- correct input (player and column)
+- checks for correct order of players (each play alternatively)
+- checks for number of tokens in each column and prevent column overflow 
 
 
 # Generic code for playing:
 
-```EXEC dbo.AddToken {column}, {player}```
+Game is started by initializing the board and players. Afther the initialization, you can start playing the gaming by alternatively adding tokens from each player. The adding of tokens is done by using the procedure
+```EXEC dbo.AddToken {column}, {player}```.
 
-Sample code:
+
+Here is the starter and sample code:
 ```(sql)
 EXEC dbo.Init
 EXEC dbo.AddToken 1, 5
 EXEC dbo.AddToken 2, 4
+...
 ```
 
 
-## Forking or cloning the repository
+During the game, you will get board displayed every single time, when user is making a move.
+
+![game play ](/img/game_board2.png)
+
+
+# Forking or cloning the repository
+
 To work in GitHub, go to https://github.com/tomaztk/Connect4_sql_game and fork the repository. Work in your own fork and when you are ready to submit to make a change or publish your sample for the first time, submit a pull request into the master branch of this repository. 
 
 You can also clone the repository. Note: further changes should be fetched manually.
@@ -96,5 +117,4 @@ Code is licensed under the MIT license.
 
 ## ToDO
 
--  error scripting (limits of the board)
--  user turns (2 x P1 in a row can not play)
+-  AI to play against the computer

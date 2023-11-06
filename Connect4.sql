@@ -1,11 +1,16 @@
 /**************************************************************
-Game:               Connect4
+Game:               Connect4 T-SQL Game
 Create Date:        2023-11-02
 Author:             Tomaz Kastrun
-Description:        ..
+Description:        Classical board game of Connect 4 tokens in 
+                    row, column or in diagonal. Played with two 
+                    users on a 6x7 board.
 
 
 Usage:              EXEC dbo.Init
+                    EXEC dbo.AddToken 1, 5
+                    EXEC dbo.AddToken 2, 4
+                    ..
                        
 ChangeLog:
 ************************************************************* */
@@ -18,7 +23,7 @@ BEGIN
   drop table if exists con4t;
 
 
-  create table dbo.con4t
+  CREATE TABLE dbo.con4t
   (r int identity(6,-1) not null 
   ,board char(7) default('0000000')
   );
@@ -32,7 +37,7 @@ BEGIN
   )
   INSERT INTO dbo.con4t_steps(player, col) VALUES (0,0)
 
-  -- populate the game   GO 6
+  -- populate the board   GO 6
     INSERT INTO dbo.con4t (board) SELECT '0000000'
     INSERT INTO dbo.con4t (board) SELECT '0000000'
     INSERT INTO dbo.con4t (board) SELECT '0000000'
