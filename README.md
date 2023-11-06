@@ -76,7 +76,7 @@ This procedure also holds some of the error handling; it checks for:
 - checks for number of tokens in each column and prevent column overflow 
 
 
-# Generic code for playing:
+# Generic code for playing the game
 
 Game is started by initializing the board and players. Afther the initialization, you can start playing the gaming by alternatively adding tokens from each player. The adding of tokens is done by using the procedure
 ```EXEC dbo.AddToken {column}, {player}```.
