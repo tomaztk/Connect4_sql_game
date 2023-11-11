@@ -115,7 +115,7 @@ Code is licensed under the MIT license.
 
 ## Blogpost
 
-Here is also the blogpost for the game: https://tomaztsql.wordpress.com/2023/11/06/connect-4-game-with-t-sql/
+Here is also the blogpost for the game: [blogpost](https://tomaztsql.wordpress.com/2023/11/06/connect-4-game-with-t-sql/)
 
 ### ToDO
 
